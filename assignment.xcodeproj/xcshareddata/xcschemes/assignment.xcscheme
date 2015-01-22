@@ -44,7 +44,7 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
       useCustomWorkingDirectory = "YES"
-      customWorkingDirectory = "$PROJECT_DIR"
+      customWorkingDirectory = "$(PROJECT_DIR)"
       buildConfiguration = "Debug"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
@@ -65,7 +65,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "YES"
-      customWorkingDirectory = "$PROJECT_DIR"
+      customWorkingDirectory = "$(PROJECT_DIR)"
       buildConfiguration = "Release"
       debugDocumentVersioning = "YES">
       <BuildableProductRunnable>
@@ -83,6 +83,7 @@
    </AnalyzeAction>
    <ArchiveAction
       buildConfiguration = "Release"
+      customArchiveName = "assignment"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>

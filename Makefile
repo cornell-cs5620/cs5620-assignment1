@@ -7,7 +7,7 @@ LDFLAGS	=
 TARGET	= assignment.exe
 
 ifeq ($(OS),Windows_NT)
-    CXXFLAGS += -D WIN32
+    CXXFLAGS += -static-libgcc -static-libstdc++ -D WIN32
     LDFLAGS += -lfreeglut -lglu32 -lglew32 -lopengl32 -lcomdlg32
 else
     UNAME := $(shell uname -s)

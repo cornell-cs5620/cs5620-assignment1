@@ -195,11 +195,11 @@
 		C5EE0A1D1A71506700FAF23F = {
 			isa = PBXGroup;
 			children = (
+				C5EE0A7B1A71524D00FAF23F /* OpenGL.framework */,
+				C5EE0A791A71524600FAF23F /* GLUT.framework */,
 				C56433A61A7158050036362F /* README.txt */,
 				C56433A71A7158050036362F /* res */,
 				C56433C61A7158050036362F /* src */,
-				C5EE0A7B1A71524D00FAF23F /* OpenGL.framework */,
-				C5EE0A791A71524600FAF23F /* GLUT.framework */,
 				C5EE0A271A71506700FAF23F /* Products */,
 			);
 			sourceTree = "<group>";

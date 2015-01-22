@@ -1,8 +1,22 @@
-For assignment 1, implement everything specified by the comments marked:
+This is an example implementation of assignment 1. The controls are as follows:
 
-	TODO Assignment 1
-	
-There are 36 of them. Good luck.
+w - move forward
+a - straif left
+s - move backward
+d - straif right
+e - move up
+q - move down
+m - bind/unbind mouse
+esc - quit
+
+right click - access menu
+
+If you are compiling on windows you will need to install a development environment
+
+If you are compiling on linux you will need the following libraries
+sudo apt-get install libglew1.10 libglew-dbg libglew-dev freeglut3 freeglut3-dev freeglut3-dbg
+
+that should also pull in all of the other dependencies
 
 If you are compiling on Mac OS X using the makefile, then there are a few options for compiling the makefile.
 

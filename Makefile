@@ -4,11 +4,12 @@ OBJECTS	:= $(subst .c,.o,$(subst .cpp,.o,$(subst src/,build/,$(SOURCES))))
 DIRECTORIES := $(sort $(dir $(OBJECTS)))
 SEARCH_PATHS = 
 LDFLAGS	= 
-TARGET	= assignment.exe
+TARGET	= assignment
 
 ifeq ($(OS),Windows_NT)
     CXXFLAGS += -static-libgcc -static-libstdc++ -D WIN32
     LDFLAGS += -lfreeglut -lglu32 -lglew32 -lopengl32 -lcomdlg32
+    TARGET += .exe
 else
     UNAME := $(shell uname -s)
     ifeq ($(UNAME),Linux)
@@ -16,6 +17,7 @@ else
         LDFLAGS += -lglut -lGL -lGLU -lGLEW
     endif
     ifeq ($(UNAME),Darwin)
+        TARGET += .exe
         ifeq ($(env),core3)
             CXXFLAGS += -D OSX_CORE3 -Wno-deprecated
             LDFLAGS += -framework GLUT -framework OpenGL

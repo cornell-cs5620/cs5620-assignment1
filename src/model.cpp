@@ -42,10 +42,8 @@ modelhdl::~modelhdl()
  */
 void modelhdl::load_obj(string filename)
 {
-	int s = 4;
 	float x, y, z;
 	int v, n, t;
-	char name[32];
 
 	ifstream fin(filename.c_str());
 	if (!fin.is_open())
@@ -75,9 +73,9 @@ void modelhdl::load_obj(string filename)
 
 				if (mtlname.size() > 0 && mtlname[0] != '/')
 				{
-					int idx = filename.find_last_of("/");
+					int idx = (int)filename.find_last_of("/");
 					if (idx == string::npos)
-						idx = filename.find_last_of("\\");
+						idx = (int)filename.find_last_of("\\");
 					mtlname = filename.substr(0, idx) + "/" + mtlname;
 				}
 
@@ -102,7 +100,7 @@ void modelhdl::load_obj(string filename)
 					texcoords.push_back(vec2f(x, y));
 				else if (command == "f")
 				{
-					int first = rigid.back().geometry.size();
+					int first = (int)rigid.back().geometry.size();
 					string part;
 					int i = 0;
 					while (iss >> part)
@@ -143,8 +141,8 @@ void modelhdl::load_obj(string filename)
 						if (i >= 2)
 						{
 							rigid.back().indices.push_back(first);
-							rigid.back().indices.push_back(rigid.back().geometry.size()-1);
-							rigid.back().indices.push_back(rigid.back().geometry.size()-2);
+							rigid.back().indices.push_back((int)rigid.back().geometry.size()-1);
+							rigid.back().indices.push_back((int)rigid.back().geometry.size()-2);
 						}
 						i++;
 					}

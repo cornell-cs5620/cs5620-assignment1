@@ -432,13 +432,13 @@ void canvashdl::draw_lines(const vector<vec8f> &geometry, const vector<int> &ind
 		{
 			if (x0.second == -1)
 			{
-				x0.second = processed_geometry.size();
+				x0.second = (int)processed_geometry.size();
 				processed_geometry.push_back(shade_vertex(x0.first));
 			}
 			else if (index_map[x0.second] == -1)
 			{
-				index_map[x0.second] = processed_geometry.size();
-				x0.second = processed_geometry.size();
+				index_map[x0.second] = (int)processed_geometry.size();
+				x0.second = (int)processed_geometry.size();
 				processed_geometry.push_back(shade_vertex(x0.first));
 			}
 			else
@@ -446,13 +446,13 @@ void canvashdl::draw_lines(const vector<vec8f> &geometry, const vector<int> &ind
 
 			if (x1.second == -1)
 			{
-				x1.second = processed_geometry.size();
+				x1.second = (int)processed_geometry.size();
 				processed_geometry.push_back(shade_vertex(x1.first));
 			}
 			else if (index_map[x1.second] == -1)
 			{
-				index_map[x1.second] = processed_geometry.size();
-				x1.second = processed_geometry.size();
+				index_map[x1.second] = (int)processed_geometry.size();
+				x1.second = (int)processed_geometry.size();
 				processed_geometry.push_back(shade_vertex(x1.first));
 			}
 			else
@@ -532,14 +532,14 @@ void canvashdl::draw_triangles(const vector<vec8f> &geometry, const vector<int> 
 			{
 				if (polygon[i].second == -1)
 				{
-					polygon[i].second = processed_geometry.size();
+					polygon[i].second = (int)processed_geometry.size();
 					polygon[i].first = shade_vertex(polygon[i].first);
 					processed_geometry.push_back(polygon[i].first);
 				}
 				else if (index_map[polygon[i].second] == -1)
 				{
-					index_map[polygon[i].second] = processed_geometry.size();
-					polygon[i].second = processed_geometry.size();
+					index_map[polygon[i].second] = (int)processed_geometry.size();
+					polygon[i].second = (int)processed_geometry.size();
 					polygon[i].first = shade_vertex(polygon[i].first);
 					processed_geometry.push_back(polygon[i].first);
 				}

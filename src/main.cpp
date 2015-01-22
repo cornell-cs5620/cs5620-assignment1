@@ -86,7 +86,7 @@ void init()
 	scene.cameras.back()->model = scene.objects.back();
 	if (!scene.active_camera_valid())
 	{
-		scene.active_camera = scene.cameras.size()-1;
+		scene.active_camera = (int)scene.cameras.size()-1;
 		scene.cameras[scene.active_camera]->project(&canvas);
 	}
 	scene.cameras[scene.active_camera]->position[2] = 10.0;
@@ -182,7 +182,7 @@ void pmotionfunc(int x, int y)
 						if ((tmin <= tzmax) && (tzmin <= tmax))
 						{
 							scene.active_object = i;
-							i = scene.objects.size();
+							i = (int)scene.objects.size();
 						}
 					}
 				}
@@ -448,7 +448,7 @@ void canvas_menu(int num)
 		scene.cameras.back()->model = scene.objects.back();
 		if (!scene.active_camera_valid())
 		{
-			scene.active_camera = scene.cameras.size()-1;
+			scene.active_camera = (int)scene.cameras.size()-1;
 			scene.cameras[scene.active_camera]->project(&canvas);
 		}
 	}
@@ -470,7 +470,7 @@ void canvas_menu(int num)
 		scene.cameras.back()->model = scene.objects.back();
 		if (!scene.active_camera_valid())
 		{
-			scene.active_camera = scene.cameras.size()-1;
+			scene.active_camera = (int)scene.cameras.size()-1;
 			scene.cameras[scene.active_camera]->project(&canvas);
 		}
 	}
@@ -492,7 +492,7 @@ void canvas_menu(int num)
 		scene.cameras.back()->model = scene.objects.back();
 		if (!scene.active_camera_valid())
 		{
-			scene.active_camera = scene.cameras.size()-1;
+			scene.active_camera = (int)scene.cameras.size()-1;
 			scene.cameras[scene.active_camera]->project(&canvas);
 		}
 	}

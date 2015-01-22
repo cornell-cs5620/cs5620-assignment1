@@ -131,10 +131,10 @@ void objecthdl::draw_normals(canvashdl *canvas, bool face)
 		{
 			for (int j = 0; j < rigid[i].geometry.size(); j++)
 			{
-				normal_indices.push_back(normal_geometry.size());
+				normal_indices.push_back((int)normal_geometry.size());
 				normal_geometry.push_back(rigid[i].geometry[j]);
 				normal_geometry.back().set(3,6,vec3f(0.0, 0.0, 0.0));
-				normal_indices.push_back(normal_geometry.size());
+				normal_indices.push_back((int)normal_geometry.size());
 				normal_geometry.push_back(rigid[i].geometry[j]);
 				normal_geometry.back().set(0,3,(vec3f)(normal_geometry.back()(0,3) + radius*0.1f*normal_geometry.back()(3,6)));
 				normal_geometry.back().set(3,6,vec3f(0.0, 0.0, 0.0));
@@ -150,10 +150,10 @@ void objecthdl::draw_normals(canvashdl *canvas, bool face)
 				vec3f center = ((vec3f)rigid[i].geometry[rigid[i].indices[j + 0]](0,3) +
 								(vec3f)rigid[i].geometry[rigid[i].indices[j + 1]](0,3) +
 								(vec3f)rigid[i].geometry[rigid[i].indices[j + 2]](0,3))/3.0f;
-				normal_indices.push_back(normal_geometry.size());
+				normal_indices.push_back((int)normal_geometry.size());
 				normal_geometry.push_back(center);
 				normal_geometry.back().set(3,8,vec5f(0.0, 0.0, 0.0, 0.0, 0.0));
-				normal_indices.push_back(normal_geometry.size());
+				normal_indices.push_back((int)normal_geometry.size());
 				normal_geometry.push_back(center + radius*0.1f*normal);
 				normal_geometry.back().set(3,8,vec5f(0.0, 0.0, 0.0, 0.0, 0.0));
 			}

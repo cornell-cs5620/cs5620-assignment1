@@ -431,7 +431,7 @@ template <class t1, class t2, int a, int b>
 vec<t1, a> operator*(mat<t1, a, b> m1, vec<t2, b> v)
 {
 	vec<t1, a> result;
-	int i, j, k;
+	int j, k;
 
 	for (j = 0; j < a; j++)
 	{

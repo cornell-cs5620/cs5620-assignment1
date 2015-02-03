@@ -205,7 +205,7 @@ vec3f canvashdl::to_window(vec2i pixel)
  */
 vec3f canvashdl::unproject(vec3f window)
 {
-	return inverse(matrices[modelview_matrix])*inverse(matrices[projection_matrix])*homogenize(window);
+	return inverse(matrices[projection_matrix]*matrices[modelview_matrix])*homogenize(window);
 }
 
 /* shade_vertex

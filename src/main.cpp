@@ -146,7 +146,22 @@ void pmotionfunc(int x, int y)
 	}
 	else if (scene.active_camera_valid())
 	{
-		vec3f direction = norm(canvas.unproject(canvas.to_window(vec2i(x, y))));
+		vec3f direction;
+		vec3f position;
+
+		if (scene.active_camera_valid())
+		{
+			if (scene.cameras[scene.active_camera]->type == "ortho")
+			{
+				position = canvas.unproject(canvas.to_window(vec2i(x, y)));
+				direction = ror3(vec3f(0.0f, 0.0f, 1.0f), scene.cameras[scene.active_camera]->orientation);
+			}
+			else
+			{
+				position = scene.cameras[scene.active_camera]->position;
+				direction = norm(canvas.unproject(canvas.to_window(vec2i(x, y))));
+			}
+		}
 
 		int old_active_object = scene.active_object;
 		scene.active_object = -1;
@@ -164,7 +179,7 @@ void pmotionfunc(int x, int y)
 				{
 					vec3f invdir = 1.0f/direction;
 					vec3i sign((int)(invdir[0] < 0), (int)(invdir[1] < 0), (int)(invdir[2] < 0));
-					vec3f origin = scene.cameras[scene.active_camera]->position - scene.objects[i]->position;
+					vec3f origin = position - scene.objects[i]->position;
 					float tmin, tmax, tymin, tymax, tzmin, tzmax;
 					tmin = (scene.objects[i]->bound[0 + sign[0]]*scene.objects[i]->scale - origin[0])*invdir[0];
 					tmax = (scene.objects[i]->bound[0 + 1-sign[0]]*scene.objects[i]->scale - origin[0])*invdir[0];
@@ -227,14 +242,29 @@ void motionfunc(int x, int y)
 		mousex = x;
 		mousey = y;
 
-		vec3f direction = norm(canvas.unproject(canvas.to_window(vec2i(x, y))));
+		vec3f direction;
+		vec3f position;
+
+		if (scene.active_camera_valid())
+		{
+			if (scene.cameras[scene.active_camera]->type == "ortho")
+			{
+				position = canvas.unproject(canvas.to_window(vec2i(x, y)));
+				direction = ror3(vec3f(0.0f, 0.0f, 1.0f), scene.cameras[scene.active_camera]->orientation);
+			}
+			else
+			{
+				position = scene.cameras[scene.active_camera]->position;
+				direction = norm(canvas.unproject(canvas.to_window(vec2i(x, y))));
+			}
+		}
 
 		if (scene.active_object_valid() && scene.active_camera_valid())
 		{
 			if (manipulator == manipulate::translate)
 			{
-				float d = mag(scene.objects[scene.active_object]->position - scene.cameras[scene.active_camera]->position);
-				scene.objects[scene.active_object]->position = d*direction + scene.cameras[scene.active_camera]->position;
+				float d = mag(scene.objects[scene.active_object]->position - position);
+				scene.objects[scene.active_object]->position = d*direction + position;
 			}
 			else if (manipulator == manipulate::rotate)
 				scene.objects[scene.active_object]->orientation += vec3f(-(float)deltay/100.0, (float)deltax/100.0, 0.0);

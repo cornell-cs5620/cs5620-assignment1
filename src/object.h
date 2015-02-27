@@ -8,6 +8,8 @@
 #include "core/geometry.h"
 #include "standard.h"
 
+#include "material.h"
+
 using namespace core;
 
 #ifndef object_h
@@ -29,6 +31,7 @@ struct rigidhdl
 
 	vector<vec8f> geometry;
 	vector<int> indices;
+	string material;
 
 	void draw(canvashdl *canvas);
 };
@@ -36,9 +39,11 @@ struct rigidhdl
 struct objecthdl
 {
 	objecthdl();
+	objecthdl(const objecthdl &o);
 	virtual ~objecthdl();
 
 	vector<rigidhdl> rigid;
+	map<string, materialhdl*> material;
 
 	vec3f position;
 	vec3f orientation;

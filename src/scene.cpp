@@ -8,6 +8,7 @@
 #include "scene.h"
 #include "camera.h"
 #include "object.h"
+#include "light.h"
 
 #include "primitive.h"
 #include "model.h"
@@ -18,6 +19,7 @@ scenehdl::scenehdl()
 	active_camera = -1;
 	active_object = -1;
 	render_normals = none;
+	render_lights = false;
 	render_cameras = false;
 }
 
@@ -33,15 +35,21 @@ scenehdl::~scenehdl()
  */
 void scenehdl::draw()
 {
-	canvas->uniform.clear();
+	/* TODO Assignment 2: Clear the uniform variables and pass the vector of
+	 * lights into the renderer as a uniform variable.
+	 */
 
 	if (active_camera_valid())
 		cameras[active_camera]->view(canvas);
+
+	// TODO Assignment 2: Update the light positions and directions
 
 	for (int i = 0; i < objects.size(); i++)
 		if (objects[i] != NULL)
 		{
 			bool is_camera = false;
+
+			// TODO Assignment 2: Render the lights;
 
 			for (int j = 0; j < cameras.size() && !is_camera; j++)
 				if (cameras[j] != NULL && cameras[j]->model == objects[i])

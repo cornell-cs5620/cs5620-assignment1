@@ -42,8 +42,10 @@ modelhdl::~modelhdl()
  */
 void modelhdl::load_obj(string filename)
 {
+	int s = 4;
 	float x, y, z;
 	int v, n, t;
+	char name[32];
 
 	ifstream fin(filename.c_str());
 	if (!fin.is_open())
@@ -73,9 +75,9 @@ void modelhdl::load_obj(string filename)
 
 				if (mtlname.size() > 0 && mtlname[0] != '/')
 				{
-					int idx = (int)filename.find_last_of("/");
+					int idx = filename.find_last_of("/");
 					if (idx == string::npos)
-						idx = (int)filename.find_last_of("\\");
+						idx = filename.find_last_of("\\");
 					mtlname = filename.substr(0, idx) + "/" + mtlname;
 				}
 
@@ -83,6 +85,13 @@ void modelhdl::load_obj(string filename)
 			}
 			else if (command == "g")
 				rigid.push_back(rigidhdl());
+			else if (command == "usemtl")
+			{
+				if (rigid.size() == 0)
+					rigid.push_back(rigidhdl());
+
+				iss >> rigid.back().material;
+			}
 			else
 			{
 				if (rigid.size() == 0)
@@ -100,7 +109,7 @@ void modelhdl::load_obj(string filename)
 					texcoords.push_back(vec2f(x, y));
 				else if (command == "f")
 				{
-					int first = (int)rigid.back().geometry.size();
+					int first = rigid.back().geometry.size();
 					string part;
 					int i = 0;
 					while (iss >> part)
@@ -141,8 +150,8 @@ void modelhdl::load_obj(string filename)
 						if (i >= 2)
 						{
 							rigid.back().indices.push_back(first);
-							rigid.back().indices.push_back((int)rigid.back().geometry.size()-1);
-							rigid.back().indices.push_back((int)rigid.back().geometry.size()-2);
+							rigid.back().indices.push_back(rigid.back().geometry.size()-1);
+							rigid.back().indices.push_back(rigid.back().geometry.size()-2);
 						}
 						i++;
 					}
@@ -170,5 +179,42 @@ void modelhdl::load_obj(string filename)
  */
 void modelhdl::load_mtl(string filename)
 {
+	ifstream fin(filename.c_str());
+	if (!fin.is_open())
+	{
+		cerr << "Error: file not found: " << filename << endl;
+		return;
+	}
 
+	string current_material = "";
+	string type = "";
+	string line(256, '\0');
+	string command;
+	while (getline(fin, line))
+	{
+		istringstream iss(line);
+
+		if (iss >> command)
+		{
+			if (command == "newmtl")
+			{
+				iss >> type;
+				iss >> current_material;
+				if (type == "uniform")
+					material[current_material] = new uniformhdl();
+				else if (type == "non_uniform")
+					material[current_material] = new nonuniformhdl();
+			}
+			else if (command == "Ke" && type == "uniform")
+				iss >> ((uniformhdl*)material[current_material])->emission[0] >> ((uniformhdl*)material[current_material])->emission[1] >> ((uniformhdl*)material[current_material])->emission[2];
+			else if (command == "Ka" && type == "uniform")
+				iss >> ((uniformhdl*)material[current_material])->ambient[0] >> ((uniformhdl*)material[current_material])->ambient[1] >> ((uniformhdl*)material[current_material])->ambient[2];
+			else if (command == "Kd" && type == "uniform")
+				iss >> ((uniformhdl*)material[current_material])->diffuse[0] >> ((uniformhdl*)material[current_material])->diffuse[1] >> ((uniformhdl*)material[current_material])->diffuse[2];
+			else if (command == "Ks" && type == "uniform")
+				iss >> ((uniformhdl*)material[current_material])->specular[0] >> ((uniformhdl*)material[current_material])->specular[1] >> ((uniformhdl*)material[current_material])->specular[2];
+			else if (command == "Ns" && type == "uniform")
+				iss >> ((uniformhdl*)material[current_material])->shininess;
+		}
+	}
 }

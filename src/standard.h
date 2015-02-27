@@ -13,4 +13,12 @@
 
 using namespace std;
 
+template <class type>
+string to_string(type value)
+{
+	ostringstream os;
+	os << value;
+	return os.str();
+}
+
 #endif

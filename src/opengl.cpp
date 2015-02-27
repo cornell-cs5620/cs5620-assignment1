@@ -21,7 +21,7 @@ GLuint load_shader_file(string filename, GLuint type)
 	fin.close();
 
 	const char *buffer = source.c_str();
-	int length = (int)source.length();
+	int length = source.length();
 
 	handle = glCreateShader(type);
 	glShaderSource(handle, 1, &buffer, &length);
@@ -40,7 +40,7 @@ GLuint load_shader_source(string source, GLuint type)
 {
 	GLuint handle = 0;
 	const char* data = source.c_str();
-	GLint length = (int)source.length();
+	GLint length = source.length();
 
 	if (length == 0)
 		return 0;

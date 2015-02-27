@@ -29,6 +29,7 @@
 #include "model.h"
 #include "primitive.h"
 #include "tinyfiledialogs.h"
+#include "light.h"
 
 int window_id;
 
@@ -64,12 +65,11 @@ manipulate::type manipulator;
 
 bool keys[256];
 
-void init(string working_directory)
+void init()
 {
 	for (int i = 0; i < 256; i++)
 		keys[i] = false;
 
-    canvas.working_directory = working_directory;
 	scene.canvas = &canvas;
 	scene.cameras.push_back(new frustumhdl());
 	scene.objects.push_back(new pyramidhdl(1.0, 1.0, 8));
@@ -87,7 +87,7 @@ void init(string working_directory)
 	scene.cameras.back()->model = scene.objects.back();
 	if (!scene.active_camera_valid())
 	{
-		scene.active_camera = (int)scene.cameras.size()-1;
+		scene.active_camera = scene.cameras.size()-1;
 		scene.cameras[scene.active_camera]->project(&canvas);
 	}
 	scene.cameras[scene.active_camera]->position[2] = 10.0;
@@ -96,6 +96,7 @@ void init(string working_directory)
 void displayfunc()
 {
 	canvas.clear_color_buffer();
+	canvas.clear_depth_buffer();
 
 	scene.draw();
 
@@ -104,7 +105,7 @@ void displayfunc()
 
 void reshapefunc(int w, int h)
 {
-	canvas.viewport(w, h);
+	canvas.viewport(0, 0, w, h);
 	glutPostRedisplay();
 }
 
@@ -198,7 +199,7 @@ void pmotionfunc(int x, int y)
 						if ((tmin <= tzmax) && (tzmin <= tmax))
 						{
 							scene.active_object = i;
-							i = (int)scene.objects.size();
+							i = scene.objects.size();
 						}
 					}
 				}
@@ -479,7 +480,7 @@ void canvas_menu(int num)
 		scene.cameras.back()->model = scene.objects.back();
 		if (!scene.active_camera_valid())
 		{
-			scene.active_camera = (int)scene.cameras.size()-1;
+			scene.active_camera = scene.cameras.size()-1;
 			scene.cameras[scene.active_camera]->project(&canvas);
 		}
 	}
@@ -501,7 +502,7 @@ void canvas_menu(int num)
 		scene.cameras.back()->model = scene.objects.back();
 		if (!scene.active_camera_valid())
 		{
-			scene.active_camera = (int)scene.cameras.size()-1;
+			scene.active_camera = scene.cameras.size()-1;
 			scene.cameras[scene.active_camera]->project(&canvas);
 		}
 	}
@@ -523,7 +524,7 @@ void canvas_menu(int num)
 		scene.cameras.back()->model = scene.objects.back();
 		if (!scene.active_camera_valid())
 		{
-			scene.active_camera = (int)scene.cameras.size()-1;
+			scene.active_camera = scene.cameras.size()-1;
 			scene.cameras[scene.active_camera]->project(&canvas);
 		}
 	}
@@ -531,6 +532,8 @@ void canvas_menu(int num)
 		canvas.polygon_mode = canvashdl::point;
 	else if (num == 22)
 		canvas.polygon_mode = canvashdl::line;
+	else if (num == 23)
+		canvas.polygon_mode = canvashdl::fill;
 	else if (num == 28)
 		canvas.culling = canvashdl::disable;
 	else if (num == 29)
@@ -555,6 +558,10 @@ void object_menu(int num)
 		{
 			if (scene.objects[scene.active_object] != NULL)
 			{
+				/* TODO Assignment 2: clean up the lights as well when the associated object
+				 * is deleted.
+				 */
+
 				for (int i = 0; i < scene.cameras.size(); )
 				{
 					if (scene.cameras[i] != NULL && scene.cameras[i]->model == scene.objects[scene.active_object])
@@ -599,6 +606,17 @@ void object_menu(int num)
 
 void create_menu()
 {
+	/* TODO Assignment 2: Add menus for handling the lights. You should
+	 * be able to enable/disable the drawing of the lights and create
+	 * directional, point, or spot lights sources. You should also be able
+	 * to change the emissive, ambient, diffuse, and specular colors and
+	 * the attenuation of the lights. Finally, you should be able to rotate
+	 * and translate the lights just like you would an object and have it
+	 * affect the lighting of the scene.
+	 */
+
+	// TODO Assignment 2: Add menus to manipulate the shading model.
+
 	int objects_id = glutCreateMenu(canvas_menu);
 	glutAddMenuEntry(" Box         ", 1);
 	glutAddMenuEntry(" Cylinder    ", 2);
@@ -622,6 +640,7 @@ void create_menu()
 	int mode_id = glutCreateMenu(canvas_menu);
 	glutAddMenuEntry(" Point       ", 21);
 	glutAddMenuEntry(" Line        ", 22);
+	glutAddMenuEntry(" Fill        ", 23);
 
 	int culling_id = glutCreateMenu(canvas_menu);
 	glutAddMenuEntry(" None        ", 28);
@@ -666,17 +685,12 @@ void create_menu()
 int main(int argc, char **argv)
 {
 	glutInit(&argc, argv);
-	int display_mode = GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE;
-#ifdef OS_CORE3
-	display_mode |= GLUT_3_2_CORE_PROFILE;
-#endif	
-	glutInitDisplayMode(display_mode);
+	glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
 
 	glutInitWindowSize(750, 750);
 	glutInitWindowPosition(0, 0);
 	window_id = glutCreateWindow("Assignment");
 
-#ifdef __GLEW_H__
 	GLenum err = glewInit();
 	if (GLEW_OK != err)
 	{
@@ -684,11 +698,10 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 	cout << "Status: Using GLEW " << glewGetString(GLEW_VERSION) << endl;
-#endif
 	cout << "Status: Using OpenGL " << glGetString(GL_VERSION) << endl;
 	cout << "Status: Using GLSL " << glGetString(GL_SHADING_LANGUAGE_VERSION) << endl;
 
-	init(string(argv[0]).substr(0, string(argv[0]).find_last_of("/\\")) + "/");
+	init();
 	create_menu();
 
 	glutReshapeFunc(reshapefunc);

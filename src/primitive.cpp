@@ -15,6 +15,8 @@ boxhdl::boxhdl(float width, float height, float depth)
 {
 	rigid.push_back(rigidhdl());
 
+	rigid[0].material = "default";
+
 	rigid[0].geometry.reserve(24);
 	rigid[0].indices.reserve(36);
 
@@ -85,6 +87,8 @@ boxhdl::boxhdl(float width, float height, float depth)
 	rigid[0].indices.push_back(23);
 
 	bound = vec6f(-width/2.0, width/2.0, -height/2.0, height/2.0, -depth/2.0, depth/2.0);
+
+	material.insert(pair<string, materialhdl*>("default", new uniformhdl()));
 }
 
 boxhdl::~boxhdl()
@@ -99,6 +103,8 @@ boxhdl::~boxhdl()
 spherehdl::spherehdl(float radius, int levels, int slices)
 {
 	rigid.push_back(rigidhdl());
+
+	rigid[0].material = "default";
 
 	rigid[0].geometry.reserve(2 + (levels-1)*slices);
 	rigid[0].geometry.push_back(vec8f(0.0, 0.0, radius, 0.0, 0.0, 1.0, 0.0, 0.0));
@@ -140,6 +146,8 @@ spherehdl::spherehdl(float radius, int levels, int slices)
 	}
 
 	bound = vec6f(-radius, radius, -radius, radius, -radius, radius);
+
+	material.insert(pair<string, materialhdl*>("default", new uniformhdl()));
 }
 
 spherehdl::~spherehdl()
@@ -154,6 +162,8 @@ spherehdl::~spherehdl()
 cylinderhdl::cylinderhdl(float radius, float height, int slices)
 {
 	rigid.push_back(rigidhdl());
+
+	rigid[0].material = "default";
 
 	rigid[0].geometry.push_back(vec8f(0.0, -height/2.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0));
 	for (int i = 0; i < slices; i++)
@@ -212,6 +222,8 @@ cylinderhdl::cylinderhdl(float radius, float height, int slices)
 	}
 
 	bound = vec6f(-radius, radius, -height/2.0, height/2.0, -radius, radius);
+
+	material.insert(pair<string, materialhdl*>("default", new uniformhdl()));
 }
 
 cylinderhdl::~cylinderhdl()
@@ -227,6 +239,11 @@ pyramidhdl::pyramidhdl(float radius, float height, int slices)
 {
 	rigid.push_back(rigidhdl());
 
+	rigid[0].material = "default";
+
+	float nheight = sqrt(1.0f/(1.0f + (height*height)/(radius*radius)));
+	float nlength = height*nheight/radius;
+
 	rigid[0].geometry.push_back(vec8f(0.0, -height/2.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0));
 	for (int i = 0; i < slices; i++)
 		rigid[0].geometry.push_back(vec8f(radius*cos(2*m_pi*(float)i/(float)slices),
@@ -238,11 +255,16 @@ pyramidhdl::pyramidhdl(float radius, float height, int slices)
 		rigid[0].geometry.push_back(vec8f(radius*cos(2*m_pi*(float)i/(float)slices),
 								 -height/2.0,
 								 radius*sin(2*m_pi*(float)i/(float)slices),
-								 cos(2*m_pi*(float)i/(float)slices),
-								 0.0,
-								 sin(2*m_pi*(float)i/(float)slices), 0.0, 0.0));
+								 nlength*cos(2*m_pi*(float)i/(float)slices),
+								 nheight,
+								 nlength*sin(2*m_pi*(float)i/(float)slices), 0.0, 0.0));
 
-	rigid[0].geometry.push_back(vec8f(0.0, height/2.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0));
+	for (int i = 0; i < slices; i++)
+		rigid[0].geometry.push_back(vec8f(0.0, height/2.0, 0.0,
+								 nlength*cos(2*m_pi*((float)i + 0.5)/(float)slices),
+								 nheight,
+								 nlength*sin(2*m_pi*((float)i + 0.5)/(float)slices), 0.0, 0.0));
+	//rigid[0].geometry.push_back(vec8f(0.0, height/2.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0));
 
 	for (int i = 0; i < slices; i++)
 	{
@@ -255,10 +277,12 @@ pyramidhdl::pyramidhdl(float radius, float height, int slices)
 	{
 		rigid[0].indices.push_back(1 + slices + i);
 		rigid[0].indices.push_back(1 + slices + (i+1)%slices);
-		rigid[0].indices.push_back(1 + 2*slices);
+		rigid[0].indices.push_back(1 + 2*slices + i);
 	}
 
 	bound = vec6f(-radius, radius, -height/2.0, height/2.0, -radius, radius);
+
+	material.insert(pair<string, materialhdl*>("default", new uniformhdl()));
 }
 
 pyramidhdl::~pyramidhdl()

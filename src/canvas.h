@@ -15,7 +15,9 @@ struct canvashdl
 {
 private:
 	unsigned char *color_buffer;
+	unsigned short *depth_buffer;
 	int width, height;
+	static const int depth = 65535;
 	int reshape_width, reshape_height;
 	double last_reshape_time;
 	bool initialized;
@@ -34,38 +36,37 @@ private:
 	double get_time();
 
 	// Buffer Management
-	void resize(int w, int h);
+	void reallocate(int w, int h);
 
 	// Bresenham's Algorithms
-	void plot(vec2i xy, vec8f v);
-	void plot_point(vec8f v);
-	void plot_line(vec8f v1, vec8f v2);
-	void plot_half_triangle(vec2i s1, vec2i s2, vec2i s3, vec8f v1, vec8f v2, vec8f v3, vec5f ave);
-	void plot_triangle(vec8f v1, vec8f v2, vec8f v3);
+	void plot(vec3i xyz, vector<float> varying);
+	void plot_point(vec3f v, vector<float> varying);
+	void plot_line(vec3f v1, vector<float> v1_varying, vec3f v2, vector<float> v2_varying);
+	void plot_half_triangle(vec3i s1, vector<float> v1_varying, vec3i s2, vector<float> v2_varying, vec3i s3, vector<float> v3_varying, vector<float> ave_varying);
+	void plot_triangle(vec3f v1, vector<float> v1_varying, vec3f v2, vector<float> v2_varying, vec3f v3, vector<float> v3_varying);
 
 public:
 	canvashdl(int w, int h);
 	~canvashdl();
-    
-    string working_directory;
 
 	// Buffer Manipulation
 	void clear_color_buffer();
 	void clear_depth_buffer();
-	void viewport(int w, int h);
+	void resize(int w, int h);
 	void swap_buffers();
 
 	int get_width();
 	int get_height();
 
 	// Matrix Manipulation
-	mat4f matrices[3];
+	mat4f matrices[4];
 
 	enum matrix_id
 	{
 		modelview_matrix = 0,
 		projection_matrix = 1,
-		normal_matrix = 2
+		normal_matrix = 2,
+		viewport_matrix = 3
 	} active_matrix;
 
 	void set_matrix(matrix_id matid);
@@ -77,6 +78,10 @@ public:
 	void frustum(float l, float r, float b, float t, float n, float f);
 	void ortho(float l, float r, float b, float t, float n, float f);
 	void look_at(vec3f eye, vec3f at, vec3f up);
+	void viewport(int left, int bottom, int right, int top);
+	void update_normal_matrix();
+
+
 	vec3f to_window(vec2i pixel);
 	vec3f unproject(vec3f window);
 
@@ -85,7 +90,16 @@ public:
 	{
 		point = 0,
 		line = 1,
+		fill = 2
 	} polygon_mode;
+
+	enum
+	{
+		none = 0,
+		flat = 1,
+		gouraud = 2,
+		phong = 3
+	} shade_model;
 
 	enum
 	{
@@ -97,8 +111,14 @@ public:
 	// Values to pass into the shaders that are uniform across all vertices and fragments
 	map<string, const void*> uniform;
 
-	vec8f shade_vertex(vec8f v);
-	vec3f shade_fragment(vec8f v);
+	template <class type>
+	void get_uniform(string name, const type* &result)
+	{
+		result = (const type*)uniform[name];
+	}
+
+	vec3f shade_vertex(vec8f v, vector<float> &varying);
+	vec3f shade_fragment(vector<float> varying);
 
 	void draw_points(const vector<vec8f> &geometry);
 	void draw_lines(const vector<vec8f> &geometry, const vector<int> &indices);

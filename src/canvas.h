@@ -49,6 +49,8 @@ public:
 	canvashdl(int w, int h);
 	~canvashdl();
 
+	string working_directory;
+
 	// Buffer Manipulation
 	void clear_color_buffer();
 	void clear_depth_buffer();

@@ -692,8 +692,8 @@ void canvashdl::load_geometry()
 
 void canvashdl::load_shader()
 {
-	GLuint vertex = load_shader_file("res/canvas.vx", GL_VERTEX_SHADER);
-	GLuint fragment = load_shader_file("res/canvas.ft", GL_FRAGMENT_SHADER);
+	GLuint vertex = load_shader_file(working_directory + "res/canvas.vx", GL_VERTEX_SHADER);
+	GLuint fragment = load_shader_file(working_directory + "res/canvas.ft", GL_FRAGMENT_SHADER);
 
 	screen_shader = glCreateProgram();
 	glAttachShader(screen_shader, vertex);

@@ -15,8 +15,6 @@ boxhdl::boxhdl(float width, float height, float depth)
 {
 	rigid.push_back(rigidhdl());
 
-	rigid[0].material = "default";
-
 	rigid[0].geometry.reserve(24);
 	rigid[0].indices.reserve(36);
 
@@ -88,7 +86,7 @@ boxhdl::boxhdl(float width, float height, float depth)
 
 	bound = vec6f(-width/2.0, width/2.0, -height/2.0, height/2.0, -depth/2.0, depth/2.0);
 
-	material.insert(pair<string, materialhdl*>("default", new uniformhdl()));
+	// TODO Assignment 2: Set up the material properties for this object
 }
 
 boxhdl::~boxhdl()
@@ -103,8 +101,6 @@ boxhdl::~boxhdl()
 spherehdl::spherehdl(float radius, int levels, int slices)
 {
 	rigid.push_back(rigidhdl());
-
-	rigid[0].material = "default";
 
 	rigid[0].geometry.reserve(2 + (levels-1)*slices);
 	rigid[0].geometry.push_back(vec8f(0.0, 0.0, radius, 0.0, 0.0, 1.0, 0.0, 0.0));
@@ -147,7 +143,7 @@ spherehdl::spherehdl(float radius, int levels, int slices)
 
 	bound = vec6f(-radius, radius, -radius, radius, -radius, radius);
 
-	material.insert(pair<string, materialhdl*>("default", new uniformhdl()));
+	// TODO Assignment 2: Set up the material properties for this object
 }
 
 spherehdl::~spherehdl()
@@ -162,8 +158,6 @@ spherehdl::~spherehdl()
 cylinderhdl::cylinderhdl(float radius, float height, int slices)
 {
 	rigid.push_back(rigidhdl());
-
-	rigid[0].material = "default";
 
 	rigid[0].geometry.push_back(vec8f(0.0, -height/2.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0));
 	for (int i = 0; i < slices; i++)
@@ -223,7 +217,7 @@ cylinderhdl::cylinderhdl(float radius, float height, int slices)
 
 	bound = vec6f(-radius, radius, -height/2.0, height/2.0, -radius, radius);
 
-	material.insert(pair<string, materialhdl*>("default", new uniformhdl()));
+	// TODO Assignment 2: Set up the material properties for this object
 }
 
 cylinderhdl::~cylinderhdl()
@@ -238,8 +232,6 @@ cylinderhdl::~cylinderhdl()
 pyramidhdl::pyramidhdl(float radius, float height, int slices)
 {
 	rigid.push_back(rigidhdl());
-
-	rigid[0].material = "default";
 
 	float nheight = sqrt(1.0f/(1.0f + (height*height)/(radius*radius)));
 	float nlength = height*nheight/radius;
@@ -282,7 +274,7 @@ pyramidhdl::pyramidhdl(float radius, float height, int slices)
 
 	bound = vec6f(-radius, radius, -height/2.0, height/2.0, -radius, radius);
 
-	material.insert(pair<string, materialhdl*>("default", new uniformhdl()));
+	// TODO Assignment 2: Set up the material properties for this object
 }
 
 pyramidhdl::~pyramidhdl()

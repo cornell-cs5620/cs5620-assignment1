@@ -65,11 +65,12 @@ manipulate::type manipulator;
 
 bool keys[256];
 
-void init()
+void init(string working_directory)
 {
 	for (int i = 0; i < 256; i++)
 		keys[i] = false;
 
+	canvas.working_directory = working_directory;
 	scene.canvas = &canvas;
 	scene.cameras.push_back(new frustumhdl());
 	scene.objects.push_back(new pyramidhdl(1.0, 1.0, 8));
@@ -685,12 +686,17 @@ void create_menu()
 int main(int argc, char **argv)
 {
 	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
+	int display_mode = GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE;
+#ifdef OSX_CORE3
+	display_mode |= GLUT_3_2_CORE_PROFILE;
+#endif
+	glutInitDisplayMode(display_mode);
 
 	glutInitWindowSize(750, 750);
 	glutInitWindowPosition(0, 0);
 	window_id = glutCreateWindow("Assignment");
 
+#ifdef __GLEW_H__
 	GLenum err = glewInit();
 	if (GLEW_OK != err)
 	{
@@ -698,10 +704,13 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 	cout << "Status: Using GLEW " << glewGetString(GLEW_VERSION) << endl;
+#endif
+
 	cout << "Status: Using OpenGL " << glGetString(GL_VERSION) << endl;
 	cout << "Status: Using GLSL " << glGetString(GL_SHADING_LANGUAGE_VERSION) << endl;
 
-	init();
+
+	init(string(argv[0]).substr(0, string(argv[0]).find_last_of("/\\")) + "/");
 	create_menu();
 
 	glutReshapeFunc(reshapefunc);

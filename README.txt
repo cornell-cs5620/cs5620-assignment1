@@ -1,4 +1,4 @@
-This is an example implementation of assignment 1. The controls are as follows:
+The controls are as follows:
 
 m - bind/unbind mouse
 esc - quit
@@ -25,22 +25,27 @@ The manipulators are as follows:
 	width		- If the current camera is an Ortho or a Frustum camera, adjust its viewport width
 	height		- If the current camera is an Ortho or a Frustum camera, adjust its viewport height
 	near		- Adjust the near plane distance from the current camera
-	far			- Adjust the far plane distance from the current camera
+	far		- Adjust the far plane distance from the current camera
 
 If you right click without an object selected, the menu items are as follows:
 Objects
-	Box			- Add a box into the scene
+	Box		- Add a box into the scene
 	Cylinder	- Add a cylinder into the scene
 	Sphere		- Add a sphere into the scene
 	Pyramid		- Add a pyramid into the scene
 	Model		- Load a .obj file into the scene
+Lights
+	Toggle Draw	- Change whether or not to render lights in the scene
+	Directional	- Add a directional light to the scene
+	Point		- Add a point light to the scene
+	Spot		- Add a spot light to the scene
 Cameras
 	Fovy		- Set the current manipulator to fovy
 	Aspect		- Set the current manipulator to aspect
 	Width		- Set the current manipulator to width
 	Height		- Set the current manipulator to height
 	Near		- Set the current manipulator to near
-	Far			- Set the current manipulator to far
+	Far		- Set the current manipulator to far
 	Toggle Draw	- Change whether or not to render cameras in the scene
 	Clear Focus	- Clear the focus of the camera
 	Ortho		- Add an Ortho camera to the scene
@@ -49,6 +54,12 @@ Cameras
 Polygon
 	Point		- Render everything as a collection of points
 	Line		- Render everything as a collection of lines (wireframe)
+	Fill		- Render everything as a collection of filled polygons
+Shading
+	None		- Turn off shading
+	Flat		- Set the shading model to flat
+	Gouraud		- Set the shading model to gouraud
+	Phong		- Set the shading model to phong
 Culling
 	None		- Don't cull any faces
 	Front		- Set culling to cull the front face
@@ -101,3 +112,4 @@ make env=core3
     This is not recommended, because you will have to rework the shaders to the newest version.
     This creates an OpenGL 3.2 instance for shaders 330. GLSL 330 is significantly different from
     120.
+

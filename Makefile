@@ -48,3 +48,4 @@ build:
 
 clean:
 	rm -f $(OBJECTS) $(TARGET) $(TARGET)
+	rm -rf build

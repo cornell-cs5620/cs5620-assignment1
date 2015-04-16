@@ -116,7 +116,11 @@ public:
 	template <class type>
 	void get_uniform(string name, const type* &result)
 	{
-		result = (const type*)uniform[name];
+		map<string, const void*>::iterator i = uniform.find(name);
+		if (i == uniform.end())
+			result = NULL;
+		else
+			result = (const type*)i->second;
 	}
 
 	vec3f shade_vertex(vec8f v, vector<float> &varying);

@@ -47,5 +47,4 @@ build:
 	mkdir $(DIRECTORIES)
 
 clean:
-	rm -f $(OBJECTS) $(TARGET) $(TARGET)
-	rm -rf build
+	rm -rf build $(TARGET)

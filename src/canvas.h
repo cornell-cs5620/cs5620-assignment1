@@ -1,3 +1,10 @@
+/*
+ * canvas.h
+ *
+ *  Created on: Dec 3, 2014
+ *      Author: nbingham
+ */
+
 #include "opengl.h"
 #include "standard.h"
 #include "core/geometry.h"

@@ -109,6 +109,7 @@ void canvashdl::set_matrix(matrix_id matid)
 /* load_identity
  *
  * Set the active matrix to the identity matrix.
+ * This implements: https://www.opengl.org/sdk/docs/man2/xhtml/glLoadIdentity.xml
  */
 void canvashdl::load_identity()
 {
@@ -118,6 +119,7 @@ void canvashdl::load_identity()
 /* rotate
  *
  * Multiply the active matrix by a rotation matrix.
+ * This implements: https://www.opengl.org/sdk/docs/man2/xhtml/glRotate.xml
  */
 void canvashdl::rotate(float angle, vec3f axis)
 {
@@ -138,6 +140,7 @@ void canvashdl::rotate(float angle, vec3f axis)
 /* translate
  *
  * Multiply the active matrix by a translation matrix.
+ * This implements: https://www.opengl.org/sdk/docs/man2/xhtml/glTranslate.xml
  */
 void canvashdl::translate(vec3f direction)
 {
@@ -150,6 +153,7 @@ void canvashdl::translate(vec3f direction)
 /* scale
  *
  * Multiply the active matrix by a scaling matrix.
+ * This implements: https://www.opengl.org/sdk/docs/man2/xhtml/glScale.xml
  */
 void canvashdl::scale(vec3f size)
 {
@@ -162,6 +166,7 @@ void canvashdl::scale(vec3f size)
 /* perspective
  *
  * Multiply the active matrix by a perspective projection matrix.
+ * This implements: https://www.opengl.org/sdk/docs/man2/xhtml/gluPerspective.xml
  */
 void canvashdl::perspective(float fovy, float aspect, float n, float f)
 {
@@ -175,6 +180,7 @@ void canvashdl::perspective(float fovy, float aspect, float n, float f)
 /* frustum
  *
  * Multiply the active matrix by a frustum projection matrix.
+ * This implements: https://www.opengl.org/sdk/docs/man2/xhtml/glFrustum.xml
  */
 void canvashdl::frustum(float l, float r, float b, float t, float n, float f)
 {
@@ -187,6 +193,7 @@ void canvashdl::frustum(float l, float r, float b, float t, float n, float f)
 /* ortho
  *
  * Multiply the active matrix by an orthographic projection matrix.
+ * This implements: https://www.opengl.org/sdk/docs/man2/xhtml/glOrtho.xml
  */
 void canvashdl::ortho(float l, float r, float b, float t, float n, float f)
 {
@@ -206,6 +213,12 @@ void canvashdl::viewport(int left, int bottom, int right, int top)
 	resize(right - left, top - bottom);
 }
 
+/* look_at
+ *
+ * Move and orient the modelview so the camera is at the 'at' position focused on the 'eye'
+ * position and rotated so the 'up' vector is up
+ * This implements: https://www.opengl.org/sdk/docs/man2/xhtml/gluLookAt.xml
+ */
 void canvashdl::look_at(vec3f eye, vec3f at, vec3f up)
 {
 	vec3f f = norm(at - eye);
@@ -241,6 +254,7 @@ vec3f canvashdl::to_window(vec2i pixel)
 /* unproject
  *
  * Unproject a window coordinate into world coordinates.
+ * This implements: https://www.opengl.org/sdk/docs/man2/xhtml/gluUnProject.xml
  */
 vec3f canvashdl::unproject(vec3f window)
 {
@@ -249,9 +263,14 @@ vec3f canvashdl::unproject(vec3f window)
 
 /* shade_vertex
  *
- * This is the vertex shader. All transformations (normal, projection, modelview, etc)
- * should happen here. Flat and Gouraud shading, those are done here as
- * well.
+ * This is the vertex shader.
+ * v[0] to v[2] is position
+ * v[3] to v[5] is normal
+ * v[7] to v[8] is texture coordinates
+ * The result from this function is interpolated and passed on to the fragment shader
+ * (its also used to draw the geometry during rasterization)
+ * Note that the only requirements for the returned values are that the first 3 components
+ * be a projected position. The rest are yours to decide what to do with.
  */
 vec3f canvashdl::shade_vertex(vec8f v, vector<float> &varying)
 {
@@ -265,8 +284,8 @@ vec3f canvashdl::shade_vertex(vec8f v, vector<float> &varying)
 
 /* shade_fragment
  *
- * This is the fragment shader. The pixel color is determined here. Phong shading is also
- * done here.
+ * This is the fragment shader. The pixel color is determined here.
+ * the values for v are the interpolated result of whatever you returned from the vertex shader
  */
 vec3f canvashdl::shade_fragment(vector<float> varying)
 {
@@ -410,34 +429,23 @@ void canvashdl::plot_triangle(vec3f v1, vector<float> v1_varying, vec3f v2, vect
 void canvashdl::draw_points(const vector<vec8f> &geometry)
 {
 	update_normal_matrix();
-	mat4f transform = matrices[projection_matrix]*matrices[modelview_matrix];
-	vec4f planes[6];
-	for (int i = 0; i < 6; i++)
-		planes[i] = transform.row(3) + (float)pow(-1.0, i)*(vec4f)transform.row(i/2);
-
 	vector<pair<vec3f, vector<float> > > processed_geometry;
 	processed_geometry.reserve(geometry.size());
 
-	for (int i = 0; i < geometry.size(); i += 3)
+	for (int i = 0; i < geometry.size(); i++)
 	{
-		bool keep = true;
-		for (int j = 0; j < 6 && keep; j++)
-			if (dot(homogenize((vec3f)geometry[i]), planes[j]) <= 0)
-				keep = false;
-
-		if (keep)
-		{
-			vector<float> varying;
-			vec3f position = matrices[viewport_matrix]*homogenize(shade_vertex(geometry[i], varying));
-			processed_geometry.push_back(pair<vec3f, vector<float> >(position, varying));
-		}
+		vector<float> varying;
+		vec3f position = matrices[viewport_matrix]*homogenize(shade_vertex(geometry[i], varying));
+		processed_geometry.push_back(pair<vec3f, vector<float> >(position, varying));
 	}
 
 	for (int i = 0; i < processed_geometry.size(); i++)
 		plot_point(processed_geometry[i].first, processed_geometry[i].second);
 }
 
-/* Draw a set of 3D lines on the canvas. Each point in geometry
+/* draw_lines
+ *
+ * Draw a set of 3D lines on the canvas. Each point in geometry
  * is formatted (vx, vy, vz, nx, ny, nz, s, t). Don't forget to clip
  * the lines against the clipping planes of the projection. You can't
  * just not render them because you'll get some weird popping at the
@@ -446,92 +454,24 @@ void canvashdl::draw_points(const vector<vec8f> &geometry)
 void canvashdl::draw_lines(const vector<vec8f> &geometry, const vector<int> &indices)
 {
 	update_normal_matrix();
-	mat4f transform = matrices[projection_matrix]*matrices[modelview_matrix];
-	vec4f planes[6];
-	for (int i = 0; i < 6; i++)
-		planes[i] = transform.row(3) + (float)pow(-1.0, i)*(vec4f)transform.row(i/2);
-
 	vector<pair<vec3f, vector<float> > > processed_geometry;
-	vector<int> processed_indices;
 	processed_geometry.reserve(geometry.size());
-	processed_indices.reserve(indices.size());
-	vector<int> index_map;
-	index_map.resize(geometry.size(), -1);
 
-	for (int i = 0; i < indices.size(); i += 2)
+	for (int i = 0; i < geometry.size(); i++)
 	{
-		pair<vec8f, int> x0 = pair<vec8f, int>(geometry[indices[i]], indices[i]);
-		pair<vec8f, int> x1 = pair<vec8f, int>(geometry[indices[i+1]], indices[i+1]);
-		bool keep = true;
-
-		for (int j = 0; j < 6 && keep; j++)
-		{
-			float d0 = dot(homogenize(x0.first), planes[j]);
-			float d1 = dot(homogenize(x1.first), planes[j]);
-			float del = dot(homogenize(x1.first) - homogenize(x0.first), planes[j]);
-			float p = -d0/del;
-
-			if (d0 > 0.0 && d1 <= 0.0)
-			{
-				x1.first = (1-p)*x0.first + p*x1.first;
-				x1.second = -1;
-			}
-			else if (d0 <= 0.0 && d1 > 0.0)
-			{
-				x0.first = (1-p)*x0.first + p*x1.first;
-				x0.second = -1;
-			}
-			else if (d0 <= 0.0 && d1 <= 0.0)
-				keep = false;
-		}
-
-		if (keep)
-		{
-			vector<float> varying;
-			vec3f position;
-			if (x0.second == -1)
-			{
-				x0.second = processed_geometry.size();
-				position = matrices[viewport_matrix]*homogenize(shade_vertex(x0.first, varying));
-				processed_geometry.push_back(pair<vec3f, vector<float> >(position, varying));
-			}
-			else if (index_map[x0.second] == -1)
-			{
-				index_map[x0.second] = processed_geometry.size();
-				x0.second = processed_geometry.size();
-				position = matrices[viewport_matrix]*homogenize(shade_vertex(x0.first, varying));
-				processed_geometry.push_back(pair<vec3f, vector<float> >(position, varying));
-			}
-			else
-				x0.second = index_map[x0.second];
-
-			if (x1.second == -1)
-			{
-				x1.second = processed_geometry.size();
-				position = matrices[viewport_matrix]*homogenize(shade_vertex(x1.first, varying));
-				processed_geometry.push_back(pair<vec3f, vector<float> >(position, varying));
-			}
-			else if (index_map[x1.second] == -1)
-			{
-				index_map[x1.second] = processed_geometry.size();
-				x1.second = processed_geometry.size();
-				position = matrices[viewport_matrix]*homogenize(shade_vertex(x1.first, varying));
-				processed_geometry.push_back(pair<vec3f, vector<float> >(position, varying));
-			}
-			else
-				x1.second = index_map[x1.second];
-
-			processed_indices.push_back(x0.second);
-			processed_indices.push_back(x1.second);
-		}
+		vector<float> varying;
+		vec3f position = matrices[viewport_matrix]*homogenize(shade_vertex(geometry[i], varying));
+		processed_geometry.push_back(pair<vec3f, vector<float> >(position, varying));
 	}
 
-	for (int i = 1; i < processed_indices.size(); i+=2)
-		plot_line(processed_geometry[processed_indices[i-1]].first, processed_geometry[processed_indices[i-1]].second,
-				  processed_geometry[processed_indices[i]].first, processed_geometry[processed_indices[i]].second);
+	for (int i = 1; i < indices.size(); i+=2)
+		plot_line(processed_geometry[indices[i-1]].first, processed_geometry[indices[i-1]].second,
+				  processed_geometry[indices[i]].first, processed_geometry[indices[i]].second);
 }
 
-/* Draw a set of 3D triangles on the canvas. Each point in geometry is
+/* draw_triangles
+ * 
+ * Draw a set of 3D triangles on the canvas. Each point in geometry is
  * formatted (vx, vy, vz, nx, ny, nz, s, t). Don't forget to clip the
  * triangles against the clipping planes of the projection. You can't
  * just not render them because you'll get some weird popping at the
@@ -540,102 +480,20 @@ void canvashdl::draw_lines(const vector<vec8f> &geometry, const vector<int> &ind
 void canvashdl::draw_triangles(const vector<vec8f> &geometry, const vector<int> &indices)
 {
 	update_normal_matrix();
-	mat4f transform = matrices[projection_matrix]*matrices[modelview_matrix];
-	vec4f planes[6];
-	for (int i = 0; i < 6; i++)
-		planes[i] = transform.row(3) + (float)pow(-1.0, i)*(vec4f)transform.row(i/2);
-	vec3f eye = matrices[modelview_matrix].col(3)(0,3);
-
 	vector<pair<vec3f, vector<float> > > processed_geometry;
-	vector<int> processed_indices;
 	processed_geometry.reserve(geometry.size());
-	processed_indices.reserve(indices.size());
-	vector<int> index_map;
-	index_map.resize(geometry.size(), -1);
 
-	for (int i = 0; i < indices.size(); i += 3)
+	for (int i = 0; i < geometry.size(); i++)
 	{
-		vector<pair<vec8f, int> > polygon;
-		for (int j = 0; j < 3; j++)
-			polygon.push_back(pair<vec8f, int>(geometry[indices[i+j]], indices[i+j]));
-
-		vector<pair<vec8f, int> > clipped;
-		for (int j = 0; j < 6; j++)
-		{
-			pair<vec8f, int> x0 = polygon[polygon.size()-1];
-			float d0 = dot(homogenize(x0.first), planes[j]);
-			for (int k = 0; k < polygon.size(); k++)
-			{
-				pair<vec8f, int> x1 = polygon[k];
-				float d1 = dot(homogenize(x1.first), planes[j]);
-				float del = dot(homogenize(x1.first) - homogenize(x0.first), planes[j]);
-				float p = -d0/del;
-
-				if (d0 >= 0.0 && d1 >= 0.0)
-					clipped.push_back(x1);
-				else if (d0 >= 0.0 && d1 < 0.0)
-					clipped.push_back(pair<vec8f, int>((1-(p+0.001f))*x0.first + (p+0.001f)*x1.first, -1));
-				else if (d0 < 0.0 && d1 >= 0.0)
-				{
-					clipped.push_back(pair<vec8f, int>((1-(p-0.001f))*x0.first + (p-0.001f)*x1.first, -1));
-					clipped.push_back(x1);
-				}
-
-				x0 = x1;
-				d0 = d1;
-			}
-
-			polygon = clipped;
-			clipped.clear();
-		}
-
-		if (polygon.size() > 2)
-		{
-			for (int i = 0; i < polygon.size(); i++)
-			{
-				vector<float> varying;
-				vec3f position;
-				if (polygon[i].second == -1)
-				{
-					polygon[i].second = processed_geometry.size();
-					position = matrices[viewport_matrix]*homogenize(shade_vertex(polygon[i].first, varying));
-					polygon[i].first = position;
-					processed_geometry.push_back(pair<vec3f, vector<float> >(position, varying));
-				}
-				else if (index_map[polygon[i].second] == -1)
-				{
-					index_map[polygon[i].second] = processed_geometry.size();
-					polygon[i].second = processed_geometry.size();
-					position = matrices[viewport_matrix]*homogenize(shade_vertex(polygon[i].first, varying));
-					polygon[i].first = position;
-					processed_geometry.push_back(pair<vec3f, vector<float> >(position, varying));
-				}
-				else
-				{
-					polygon[i].second = index_map[polygon[i].second];
-					polygon[i].first = processed_geometry[polygon[i].second].first;
-				}
-			}
-
-			for (int i = 2; i < polygon.size(); i++)
-			{
-				vec3f normal = cross(norm((vec3f)polygon[0].first - (vec3f)polygon[i-1].first),
-								     norm((vec3f)polygon[i].first - (vec3f)polygon[i-1].first));
-
-				if (culling == disable || (normal[2] >= 0.0 && culling == backface) || (normal[2] <= 0.0 && culling == frontface))
-				{
-					processed_indices.push_back(polygon[0].second);
-					processed_indices.push_back(polygon[i-1].second);
-					processed_indices.push_back(polygon[i].second);
-				}
-			}
-		}
+		vector<float> varying;
+		vec3f position = matrices[viewport_matrix]*homogenize(shade_vertex(geometry[i], varying));
+		processed_geometry.push_back(pair<vec3f, vector<float> >(position, varying));
 	}
 
-	for (int i = 2; i < processed_indices.size(); i+=3)
-		plot_triangle(processed_geometry[processed_indices[i-2]].first, processed_geometry[processed_indices[i-2]].second,
-					  processed_geometry[processed_indices[i-1]].first, processed_geometry[processed_indices[i-1]].second,
-					  processed_geometry[processed_indices[i]].first, processed_geometry[processed_indices[i]].second);
+	for (int i = 2; i < indices.size(); i+=3)
+		plot_triangle(processed_geometry[indices[i-2]].first, processed_geometry[indices[i-2]].second,
+					  processed_geometry[indices[i-1]].first, processed_geometry[indices[i-1]].second,
+					  processed_geometry[indices[i]].first, processed_geometry[indices[i]].second);
 }
 
 

@@ -517,6 +517,14 @@ void canvas_menu(int num)
 		canvas.polygon_mode = canvashdl::point;
 	else if (num == 22)
 		canvas.polygon_mode = canvashdl::line;
+	else if (num == 23)
+		canvas.polygon_mode = canvashdl::fill;
+	else if (num == 28)
+		canvas.culling = canvashdl::disable;
+	else if (num == 29)
+		canvas.culling = canvashdl::backface;
+	else if (num == 30)
+		canvas.culling = canvashdl::frontface;
 	else if (num == 31)
 		scene.render_normals = scenehdl::none;
 	else if (num == 32)
@@ -618,6 +626,14 @@ void create_menu()
 	glutAddMenuEntry(" Point       ", 21);
 	glutAddMenuEntry(" Line        ", 22);
 
+	// TODO Assignment 2: uncomment this
+	//glutAddMenuEntry(" Fill        ", 23);
+
+	//int culling_id = glutCreateMenu(canvas_menu);
+	//glutAddMenuEntry(" None        ", 28);
+	//glutAddMenuEntry(" Back        ", 29);
+	//glutAddMenuEntry(" Front       ", 30);
+
 	int normal_id = glutCreateMenu(canvas_menu);
 	glutAddMenuEntry(" None        ", 31);
 	glutAddMenuEntry(" Face        ", 32);
@@ -627,6 +643,8 @@ void create_menu()
     glutAddSubMenu  (" Objects     ", objects_id);
     glutAddSubMenu  (" Cameras     ", camera_id);
     glutAddSubMenu  (" Polygon     ", mode_id);
+    // TODO Assignment 2: uncomment this
+    //glutAddSubMenu  (" Culling     ", culling_id);
     glutAddSubMenu  (" Normals     ", normal_id);
     glutAddMenuEntry(" Quit        ", 0);
 

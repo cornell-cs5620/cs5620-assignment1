@@ -274,7 +274,7 @@ vec3f canvashdl::unproject(vec3f window)
  */
 vec3f canvashdl::shade_vertex(vec8f v, vector<float> &varying)
 {
-	/* TODO Assignment 2: Get the material from the list of uniform variables and
+	/* TODO Assignment 3: Get the material from the list of uniform variables and
 	 * call its vertex shader.
 	 */
 	vec4f eye_space_vertex = matrices[projection_matrix]*matrices[modelview_matrix]*homogenize(v);
@@ -289,7 +289,7 @@ vec3f canvashdl::shade_vertex(vec8f v, vector<float> &varying)
  */
 vec3f canvashdl::shade_fragment(vector<float> varying)
 {
-	/* TODO Assignment 2: Get the material from the list of uniform variables and
+	/* TODO Assignment 3: Get the material from the list of uniform variables and
 	 * call its fragment shader.
 	 */
 	return vec3f(1.0, 1.0, 1.0);
@@ -301,7 +301,7 @@ vec3f canvashdl::shade_fragment(vector<float> varying)
  */
 void canvashdl::plot(vec3i xyz, vector<float> varying)
 {
-	/* TODO Assignment 2: Compare the z value against the depth buffer and
+	/* TODO Assignment 3: Compare the z value against the depth buffer and
 	 * only render if its less. Then set the depth buffer.
 	 */
 
@@ -346,7 +346,7 @@ void canvashdl::plot_line(vec3f v1, vector<float> v1_varying, vec3f v2, vector<f
 
 	int D = 2*dv[1-b] - dv[b];
 
-	// TODO Assignment 2: Interpolate the varying values before passing them into plot.
+	// TODO Assignment 3: Interpolate the varying values before passing them into plot.
 
 	plot(s1, v1_varying);
 
@@ -382,9 +382,9 @@ void canvashdl::plot_line(vec3f v1, vector<float> v1_varying, vec3f v2, vector<f
  */
 void canvashdl::plot_half_triangle(vec3i s1, vector<float> v1_varying, vec3i s2, vector<float> v2_varying, vec3i s3, vector<float> v3_varying, vector<float> ave_varying)
 {
-	// TODO Assignment 2: Implement Bresenham's half triangle fill algorithm
+	// TODO Assignment 3: Implement Bresenham's half triangle fill algorithm
 
-	// TODO Assignment 2: Interpolate the varying values before passing them into plot.
+	// TODO Assignment 3: Interpolate the varying values before passing them into plot.
 }
 
 /* plot_triangle
@@ -414,7 +414,7 @@ void canvashdl::plot_triangle(vec3f v1, vector<float> v1_varying, vec3f v2, vect
 		plot_line(v2, v2_varying, v3, v3_varying);
 		plot_line(v3, v3_varying, v1, v1_varying);
 
-		// TODO Assignment 2: Calculate the average varying vector for flat shading and call plot_half_triangle as needed.
+		// TODO Assignment 3: Calculate the average varying vector for flat shading and call plot_half_triangle as needed.
 	}
 }
 

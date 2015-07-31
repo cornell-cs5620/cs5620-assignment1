@@ -46,7 +46,7 @@ directionalhdl::~directionalhdl()
 
 void directionalhdl::update(canvashdl *canvas)
 {
-	/* TODO Assignment 2: Update the direction of the light using the orientation of the attached model.
+	/* TODO Assignment 3: Update the direction of the light using the orientation of the attached model.
 	 * The easiest thing is to do translations and rotations like you were going to render the object, and
 	 * then just multiply some initial direction vector by the normal matrix.
 	 */
@@ -54,7 +54,7 @@ void directionalhdl::update(canvashdl *canvas)
 
 void directionalhdl::shade(vec3f &ambient, vec3f &diffuse, vec3f &specular, vec3f vertex, vec3f normal, float shininess) const
 {
-	/* TODO Assignment 2: Implement a directional light. See the OpenGL Orange Book in the references section
+	/* TODO Assignment 3: Implement a directional light. See the OpenGL Orange Book in the references section
 	 * of the course website. Its under the section about emulating the fixed function pipeline.
 	 */
 }
@@ -78,7 +78,7 @@ pointhdl::~pointhdl()
 
 void pointhdl::update(canvashdl *canvas)
 {
-	/* TODO Assignment 2: Update the position of the light using the position of the attached model.
+	/* TODO Assignment 3: Update the position of the light using the position of the attached model.
 	 * The easiest thing is to do translations and rotations like you were going to render the object, and
 	 * then just multiply the origin by the modelview matrix.
 	 */
@@ -86,7 +86,7 @@ void pointhdl::update(canvashdl *canvas)
 
 void pointhdl::shade(vec3f &ambient, vec3f &diffuse, vec3f &specular, vec3f vertex, vec3f normal, float shininess) const
 {
-	/* TODO Assignment 2: Implement a point light. See the OpenGL Orange Book in the references section
+	/* TODO Assignment 3: Implement a point light. See the OpenGL Orange Book in the references section
 	 * of the course website. Its under the section about emulating the fixed function pipeline.
 	 */
 }
@@ -114,14 +114,14 @@ spothdl::~spothdl()
 
 void spothdl::update(canvashdl *canvas)
 {
-	/* TODO Assignment 2: Update both the direction and position of the light using the position and orientation
+	/* TODO Assignment 3: Update both the direction and position of the light using the position and orientation
 	 * of the attached model. See above.
 	 */
 }
 
 void spothdl::shade(vec3f &ambient, vec3f &diffuse, vec3f &specular, vec3f vertex, vec3f normal, float shininess) const
 {
-	/* TODO Assignment 2: Implement a spot light. See the OpenGL Orange Book in the references section
+	/* TODO Assignment 3: Implement a spot light. See the OpenGL Orange Book in the references section
 	 * of the course website. Its under the section about emulating the fixed function pipeline.
 	 */
 }

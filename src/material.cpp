@@ -41,7 +41,7 @@ vec3f uniformhdl::shade_vertex(canvashdl *canvas, vec3f vertex, vec3f normal, ve
 {
 	vec4f eye_space_vertex = canvas->matrices[canvashdl::modelview_matrix]*homogenize(vertex);
 
-	/* TODO Assignment 2: Implement flat and gouraud shading: Get the lights from the canvas using get_uniform.
+	/* TODO Assignment 3: Implement flat and gouraud shading: Get the lights from the canvas using get_uniform.
 	 * Add up the results of the shade functions for the lights. Transform the vertex and normal from world
 	 * coordinates to eye coordinates before passing them into the shade functions. Calculate the final color
 	 * and pass that to the fragment shader through the varying array. Pass the necessary data for phong shading
@@ -55,7 +55,7 @@ vec3f uniformhdl::shade_vertex(canvashdl *canvas, vec3f vertex, vec3f normal, ve
 
 vec3f uniformhdl::shade_fragment(canvashdl *canvas, vector<float> &varying) const
 {
-	/* TODO Assignment 2: For flat and gouraud shading, just return the color you passed through the varying array.
+	/* TODO Assignment 3: For flat and gouraud shading, just return the color you passed through the varying array.
 	 * Implement phong shading, doing the same thing that you did to implement the gouraud and flat. The difference
 	 * is that the normals have been interpolated. Implement the none shading model, this just returns the
 	 * color of the material without lighting.
@@ -90,7 +90,7 @@ vec3f nonuniformhdl::shade_vertex(canvashdl *canvas, vec3f vertex, vec3f normal,
 {
 	vec4f eye_space_vertex = canvas->matrices[canvashdl::modelview_matrix]*homogenize(vertex);
 
-	/* TODO Assignment 2: Implement the vertex shader for some non-uniform material here. You can actually
+	/* TODO Assignment 3: Implement the vertex shader for some non-uniform material here. You can actually
 	 * implement as many as you want, just make sure to make the correct changes in model.cpp when you load
 	 * the material library. Same thing goes if you decide to rename this class.
 	 */
@@ -102,7 +102,7 @@ vec3f nonuniformhdl::shade_vertex(canvashdl *canvas, vec3f vertex, vec3f normal,
 
 vec3f nonuniformhdl::shade_fragment(canvashdl *canvas, vector<float> &varying) const
 {
-	/* TODO Assignment 2: Implement the fragment shader for some non-uniform material here. You can actually
+	/* TODO Assignment 3: Implement the fragment shader for some non-uniform material here. You can actually
 	 * implement as many as you want, just make sure to make the correct changes in model.cpp when you load
 	 * the material library. Same thing goes if you decide to rename this class.
 	 */

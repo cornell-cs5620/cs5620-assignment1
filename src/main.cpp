@@ -543,7 +543,7 @@ void object_menu(int num)
 		{
 			if (scene.objects[scene.active_object] != NULL)
 			{
-				/* TODO Assignment 2: clean up the lights as well when the associated object
+				/* TODO Assignment 3: clean up the lights as well when the associated object
 				 * is deleted.
 				 */
 
@@ -591,7 +591,7 @@ void object_menu(int num)
 
 void create_menu()
 {
-	/* TODO Assignment 2: Add menus for handling the lights. You should
+	/* TODO Assignment 3: Add menus for handling the lights. You should
 	 * be able to enable/disable the drawing of the lights and create
 	 * directional, point, or spot lights sources. You should also be able
 	 * to change the emissive, ambient, diffuse, and specular colors and
@@ -600,7 +600,7 @@ void create_menu()
 	 * affect the lighting of the scene.
 	 */
 
-	// TODO Assignment 2: Add menus to manipulate the shading model.
+	// TODO Assignment 3: Add menus to manipulate the shading model.
 
 	int objects_id = glutCreateMenu(canvas_menu);
 	glutAddMenuEntry(" Box         ", 1);
@@ -626,7 +626,7 @@ void create_menu()
 	glutAddMenuEntry(" Point       ", 21);
 	glutAddMenuEntry(" Line        ", 22);
 
-	// TODO Assignment 2: uncomment this
+	// TODO Assignment 3: uncomment this
 	//glutAddMenuEntry(" Fill        ", 23);
 
 	//int culling_id = glutCreateMenu(canvas_menu);
@@ -643,7 +643,7 @@ void create_menu()
     glutAddSubMenu  (" Objects     ", objects_id);
     glutAddSubMenu  (" Cameras     ", camera_id);
     glutAddSubMenu  (" Polygon     ", mode_id);
-    // TODO Assignment 2: uncomment this
+    // TODO Assignment 3: uncomment this
     //glutAddSubMenu  (" Culling     ", culling_id);
     glutAddSubMenu  (" Normals     ", normal_id);
     glutAddMenuEntry(" Quit        ", 0);

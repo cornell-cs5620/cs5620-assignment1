@@ -73,7 +73,7 @@ void objecthdl::draw(canvashdl *canvas)
 
 	for (int i = 0; i < rigid.size(); i++)
 	{
-		// TODO Assignment 2: Pass the material as a uniform into the renderer
+		// TODO Assignment 3: Pass the material as a uniform into the renderer
 		rigid[i].draw(canvas);
 	}
 
@@ -117,7 +117,7 @@ void objecthdl::draw_bound(canvashdl *canvas)
 		bound_indices.push_back(i);
 		bound_indices.push_back(4+i);
 	}
-	// TODO Assignment 2: clear the material in the uniform list
+	// TODO Assignment 3: clear the material in the uniform list
 	canvas->draw_lines(bound_geometry, bound_indices);
 	canvas->scale(vec3f(1.0/scale, 1.0/scale, 1.0/scale));
 	canvas->rotate(-orientation[2], vec3f(0.0, 0.0, 1.0));
@@ -181,7 +181,7 @@ void objecthdl::draw_normals(canvashdl *canvas, bool face)
 			}
 		}
 
-		// TODO Assignment 2: clear the material in the uniform list
+		// TODO Assignment 3: clear the material in the uniform list
 		canvas->draw_lines(normal_geometry, normal_indices);
 		normal_geometry.clear();
 		normal_indices.clear();

@@ -35,21 +35,21 @@ scenehdl::~scenehdl()
  */
 void scenehdl::draw()
 {
-	/* TODO Assignment 2: Clear the uniform variables and pass the vector of
+	/* TODO Assignment 3: Clear the uniform variables and pass the vector of
 	 * lights into the renderer as a uniform variable.
 	 */
 
 	if (active_camera_valid())
 		cameras[active_camera]->view(canvas);
 
-	// TODO Assignment 2: Update the light positions and directions
+	// TODO Assignment 3: Update the light positions and directions
 
 	for (int i = 0; i < objects.size(); i++)
 		if (objects[i] != NULL)
 		{
 			bool is_camera = false;
 
-			// TODO Assignment 2: Render the lights;
+			// TODO Assignment 3: Render the lights;
 
 			for (int j = 0; j < cameras.size() && !is_camera; j++)
 				if (cameras[j] != NULL && cameras[j]->model == objects[i])

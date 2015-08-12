@@ -10,6 +10,7 @@
 #include <string.h>
 #include <ctime>
 #include <sys/time.h>
+#include <algorithm>
 
 using namespace std;
 

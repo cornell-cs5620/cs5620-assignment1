@@ -27,10 +27,20 @@ struct materialhdl
 	virtual materialhdl *clone() const = 0;
 };
 
-struct uniformhdl : materialhdl
+struct whitehdl : materialhdl
 {
-	uniformhdl();
-	~uniformhdl();
+	whitehdl();
+	~whitehdl();
+
+	vec3f shade_vertex(canvashdl *canvas, vec3f vertex, vec3f normal, vector<float> &varying) const;
+	vec3f shade_fragment(canvashdl *canvas, vector<float> &varying) const;
+	materialhdl *clone() const;
+};
+
+struct gouraudhdl : materialhdl
+{
+	gouraudhdl();
+	~gouraudhdl();
 
 	vec3f emission;
 	vec3f ambient;
@@ -43,10 +53,26 @@ struct uniformhdl : materialhdl
 	materialhdl *clone() const;
 };
 
-struct nonuniformhdl : materialhdl
+struct phonghdl : materialhdl
 {
-	nonuniformhdl();
-	~nonuniformhdl();
+	phonghdl();
+	~phonghdl();
+
+	vec3f emission;
+	vec3f ambient;
+	vec3f diffuse;
+	vec3f specular;
+	float shininess;
+
+	vec3f shade_vertex(canvashdl *canvas, vec3f vertex, vec3f normal, vector<float> &varying) const;
+	vec3f shade_fragment(canvashdl *canvas, vector<float> &varying) const;
+	materialhdl *clone() const;
+};
+
+struct customhdl : materialhdl
+{
+	customhdl();
+	~customhdl();
 
 	vec3f shade_vertex(canvashdl *canvas, vec3f vertex, vec3f normal, vector<float> &varying) const;
 	vec3f shade_fragment(canvashdl *canvas, vector<float> &varying) const;

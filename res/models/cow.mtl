@@ -1,4 +1,4 @@
-newmtl non_uniform Material__1
+newmtl phong Material__1
 Ka 1.0 1.0 1.0
 Kd 1.0 1.0 1.0
 Ks 0.0 0.0 0.0

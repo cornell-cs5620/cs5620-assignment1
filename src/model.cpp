@@ -204,21 +204,33 @@ void modelhdl::load_mtl(string filename)
 			{
 				iss >> type;
 				iss >> current_material;
-				if (type == "uniform")
-					material[current_material] = new uniformhdl();
-				else if (type == "non_uniform")
-					material[current_material] = new nonuniformhdl();
+				if (type == "white")
+					material[current_material] = new whitehdl();
+				else if (type == "gouraud")
+					material[current_material] = new gouraudhdl();
+				else if (type == "phong")
+					material[current_material] = new phonghdl();
 			}
-			else if (command == "Ke" && type == "uniform")
-				iss >> ((uniformhdl*)material[current_material])->emission[0] >> ((uniformhdl*)material[current_material])->emission[1] >> ((uniformhdl*)material[current_material])->emission[2];
-			else if (command == "Ka" && type == "uniform")
-				iss >> ((uniformhdl*)material[current_material])->ambient[0] >> ((uniformhdl*)material[current_material])->ambient[1] >> ((uniformhdl*)material[current_material])->ambient[2];
-			else if (command == "Kd" && type == "uniform")
-				iss >> ((uniformhdl*)material[current_material])->diffuse[0] >> ((uniformhdl*)material[current_material])->diffuse[1] >> ((uniformhdl*)material[current_material])->diffuse[2];
-			else if (command == "Ks" && type == "uniform")
-				iss >> ((uniformhdl*)material[current_material])->specular[0] >> ((uniformhdl*)material[current_material])->specular[1] >> ((uniformhdl*)material[current_material])->specular[2];
-			else if (command == "Ns" && type == "uniform")
-				iss >> ((uniformhdl*)material[current_material])->shininess;
+			else if (command == "Ke" && type == "gouraud")
+				iss >> ((gouraudhdl*)material[current_material])->emission[0] >> ((gouraudhdl*)material[current_material])->emission[1] >> ((gouraudhdl*)material[current_material])->emission[2];
+			else if (command == "Ka" && type == "gouraud")
+				iss >> ((gouraudhdl*)material[current_material])->ambient[0] >> ((gouraudhdl*)material[current_material])->ambient[1] >> ((gouraudhdl*)material[current_material])->ambient[2];
+			else if (command == "Kd" && type == "gouraud")
+				iss >> ((gouraudhdl*)material[current_material])->diffuse[0] >> ((gouraudhdl*)material[current_material])->diffuse[1] >> ((gouraudhdl*)material[current_material])->diffuse[2];
+			else if (command == "Ks" && type == "gouraud")
+				iss >> ((gouraudhdl*)material[current_material])->specular[0] >> ((gouraudhdl*)material[current_material])->specular[1] >> ((gouraudhdl*)material[current_material])->specular[2];
+			else if (command == "Ns" && type == "gouraud")
+				iss >> ((gouraudhdl*)material[current_material])->shininess;
+			else if (command == "Ke" && type == "phong")
+				iss >> ((phonghdl*)material[current_material])->emission[0] >> ((phonghdl*)material[current_material])->emission[1] >> ((phonghdl*)material[current_material])->emission[2];
+			else if (command == "Ka" && type == "phong")
+				iss >> ((phonghdl*)material[current_material])->ambient[0] >> ((phonghdl*)material[current_material])->ambient[1] >> ((phonghdl*)material[current_material])->ambient[2];
+			else if (command == "Kd" && type == "phong")
+				iss >> ((phonghdl*)material[current_material])->diffuse[0] >> ((phonghdl*)material[current_material])->diffuse[1] >> ((phonghdl*)material[current_material])->diffuse[2];
+			else if (command == "Ks" && type == "phong")
+				iss >> ((phonghdl*)material[current_material])->specular[0] >> ((phonghdl*)material[current_material])->specular[1] >> ((phonghdl*)material[current_material])->specular[2];
+			else if (command == "Ns" && type == "phong")
+				iss >> ((phonghdl*)material[current_material])->shininess;
 		}
 	}
 }

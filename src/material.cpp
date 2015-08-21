@@ -30,10 +30,7 @@ whitehdl::~whitehdl()
 
 vec3f whitehdl::shade_vertex(canvashdl *canvas, vec3f vertex, vec3f normal, vector<float> &varying) const
 {
-	vec4f eye_space_vertex = canvas->matrices[canvashdl::modelview_matrix]*homogenize(vertex);
-	eye_space_vertex = canvas->matrices[canvashdl::projection_matrix]*eye_space_vertex;
-	eye_space_vertex /= eye_space_vertex[3];
-	return eye_space_vertex;
+	// TODO Assignment 3: Move your solid color shader from the canvas to here.
 }
 
 vec3f whitehdl::shade_fragment(canvashdl *canvas, vector<float> &varying) const
@@ -69,26 +66,15 @@ gouraudhdl::~gouraudhdl()
  */
 vec3f gouraudhdl::shade_vertex(canvashdl *canvas, vec3f vertex, vec3f normal, vector<float> &varying) const
 {
-	vec4f eye_space_vertex = canvas->matrices[canvashdl::modelview_matrix]*homogenize(vertex);
-
-	/* TODO Assignment 3: Implement flat and gouraud shading: Get the lights from the canvas using get_uniform.
-	 * Add up the results of the shade functions for the lights. Transform the vertex and normal from world
-	 * coordinates to eye coordinates before passing them into the shade functions. Calculate the final color
-	 * and pass that to the fragment shader through the varying array. Pass the necessary data for phong shading
-	 * through the varying array.
+	/* TODO Assignment 3: For flat and gouraud shading, just return the color you passed through the varying array.
+	 * The final color is calculated in the vertex shader and passed to the fragment shader.
 	 */
-
-	eye_space_vertex = canvas->matrices[canvashdl::projection_matrix]*eye_space_vertex;
-	eye_space_vertex /= eye_space_vertex[3];
-	return eye_space_vertex;
 }
 
 vec3f gouraudhdl::shade_fragment(canvashdl *canvas, vector<float> &varying) const
 {
 	/* TODO Assignment 3: For flat and gouraud shading, just return the color you passed through the varying array.
-	 * Implement phong shading, doing the same thing that you did to implement the gouraud and flat. The difference
-	 * is that the normals have been interpolated. Implement the none shading model, this just returns the
-	 * color of the material without lighting.
+	 * The final color is calculated in the vertex shader and passed to the fragment shader.
 	 */
 
 	return vec3f(1.0, 1.0, 1.0);
@@ -127,26 +113,17 @@ phonghdl::~phonghdl()
  */
 vec3f phonghdl::shade_vertex(canvashdl *canvas, vec3f vertex, vec3f normal, vector<float> &varying) const
 {
-	vec4f eye_space_vertex = canvas->matrices[canvashdl::modelview_matrix]*homogenize(vertex);
-
-	/* TODO Assignment 3: Implement flat and gouraud shading: Get the lights from the canvas using get_uniform.
-	 * Add up the results of the shade functions for the lights. Transform the vertex and normal from world
-	 * coordinates to eye coordinates before passing them into the shade functions. Calculate the final color
-	 * and pass that to the fragment shader through the varying array. Pass the necessary data for phong shading
-	 * through the varying array.
+	/* TODO Assignment 3: Implement phong shading, doing the same thing that you did to implement the gouraud
+	 * and flat. The difference is that the normals have been interpolated and passed into the fragment shader
+	 * instead of the color. The final color is calculated in the fragment shader.
 	 */
-
-	eye_space_vertex = canvas->matrices[canvashdl::projection_matrix]*eye_space_vertex;
-	eye_space_vertex /= eye_space_vertex[3];
-	return eye_space_vertex;
 }
 
 vec3f phonghdl::shade_fragment(canvashdl *canvas, vector<float> &varying) const
 {
-	/* TODO Assignment 3: For flat and gouraud shading, just return the color you passed through the varying array.
-	 * Implement phong shading, doing the same thing that you did to implement the gouraud and flat. The difference
-	 * is that the normals have been interpolated. Implement the none shading model, this just returns the
-	 * color of the material without lighting.
+	/* TODO Assignment 3: Implement phong shading, doing the same thing that you did to implement the gouraud
+	 * and flat. The difference is that the normals have been interpolated and passed into the fragment shader
+	 * instead of the color. The final color is calculated in the fragment shader.
 	 */
 
 	return vec3f(1.0, 1.0, 1.0);
@@ -176,18 +153,12 @@ customhdl::~customhdl()
 
 vec3f customhdl::shade_vertex(canvashdl *canvas, vec3f vertex, vec3f normal, vector<float> &varying) const
 {
-	vec4f eye_space_vertex = canvas->matrices[canvashdl::modelview_matrix]*homogenize(vertex);
-
 	/* TODO Assignment 3: Implement flat and gouraud shading: Get the lights from the canvas using get_uniform.
 	 * Add up the results of the shade functions for the lights. Transform the vertex and normal from world
 	 * coordinates to eye coordinates before passing them into the shade functions. Calculate the final color
 	 * and pass that to the fragment shader through the varying array. Pass the necessary data for phong shading
 	 * through the varying array.
 	 */
-
-	eye_space_vertex = canvas->matrices[canvashdl::projection_matrix]*eye_space_vertex;
-	eye_space_vertex /= eye_space_vertex[3];
-	return eye_space_vertex;
 }
 
 vec3f customhdl::shade_fragment(canvashdl *canvas, vector<float> &varying) const

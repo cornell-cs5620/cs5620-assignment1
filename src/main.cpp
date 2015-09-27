@@ -621,6 +621,8 @@ void object_menu(int num)
 					if (scene.cameras[i] != NULL && scene.cameras[i]->model == scene.objects[scene.active_object])
 					{
 						delete scene.cameras[i];
+						if (scene.active_camera > i)
+							scene.active_camera--;
 						scene.cameras.erase(scene.cameras.begin() + i);
 					}
 					else

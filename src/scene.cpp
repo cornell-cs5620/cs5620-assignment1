@@ -55,7 +55,7 @@ void scenehdl::draw()
 				if (cameras[j] != NULL && cameras[j]->model == objects[i])
 					is_camera = true;
 
-			if (!is_camera || (is_camera && render_cameras))
+			if (!is_camera || (is_camera && render_cameras && (!active_camera_valid() || objects[i] != cameras[active_camera]->model)))
 			{
 				objects[i]->draw(canvas);
 

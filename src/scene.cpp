@@ -25,7 +25,17 @@ scenehdl::scenehdl()
 
 scenehdl::~scenehdl()
 {
+	for (int i = 0; i < (int)objects.size(); i++)
+		delete objects[i];
+	objects.clear();
 
+	for (int i = 0; i < (int)cameras.size(); i++)
+		delete cameras[i];
+	cameras.clear();
+
+	for (int i = 0; i < (int)lights.size(); i++)
+		delete lights[i];
+	lights.clear();
 }
 
 /* draw

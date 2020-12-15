@@ -95,6 +95,7 @@ void reshapefunc(int w, int h)
 	glutPostRedisplay();
 }
 
+bool warp = false;
 void pmotionfunc(int x, int y)
 {
 	if (bound)
@@ -107,26 +108,32 @@ void pmotionfunc(int x, int y)
 		mousex = x;
 		mousey = y;
 
-		bool warp = false;
+		bool set_warp = false;
 		if (mousex > 3*canvas.get_width()/4 || mousex < canvas.get_width()/4)
 		{
 			mousex = canvas.get_width()/2;
-			warp = true;
+			set_warp = true;
 		}
 
 		if (mousey > 3*canvas.get_height()/4 || mousey < canvas.get_height()/4)
 		{
 			mousey = canvas.get_height()/2;
-			warp = true;
+			set_warp = true;
 		}
 
-		if (warp)
-			glutWarpPointer(mousex, mousey);
+		if (!set_warp)
+			warp = false;
 
-		if (scene.active_camera_valid())
+		if (scene.active_camera_valid() && !warp)
 		{
 			scene.cameras[scene.active_camera]->orientation[1] -= (float)deltax/500.0;
 			scene.cameras[scene.active_camera]->orientation[0] -= (float)deltay/500.0;
+		}
+
+		if (set_warp)
+		{
+			glutWarpPointer(mousex, mousey);
+			warp = true;
 		}
 
 		glutPostRedisplay();
